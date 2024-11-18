@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import Menu from "./menu.model";
+import fs from "fs";
 
 export const getMenu = async (req: Request, res: Response) => {
   try {
@@ -58,7 +59,7 @@ export const updateMenu = async (req: Request, res: Response) => {
     const updatedMenu = await Menu.findByIdAndUpdate(
       id,
       { img: req.file?.path, title, desc },
-      { new: true, runValidators: true}
+      { new: true, runValidators: true }
     )
 
     console.log(updatedMenu);
@@ -78,5 +79,25 @@ export const updateMenu = async (req: Request, res: Response) => {
 }
 
 export const deleteMenu = async (req: Request, res: Response) => {
-  
+  const { id } = req.params;
+  try {
+    const deletedMenu = await Menu.findByIdAndDelete(id);
+    console.log(deletedMenu);
+    if (!deletedMenu)
+      return res.status(404).json({ message: "Menu not found" });
+
+    if (deletedMenu.img) {
+      try {
+        fs.unlinkSync(`${deletedMenu.img}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    res.status(200).json({ message: "Menu Deleted Successfully", Data: deletedMenu });
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+    else
+      res.status(500).json({ message: "An Unknown Error Occurred" });
+  }
 }
