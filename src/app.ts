@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import menuRoutes from "./api/menu/menu.routes";
+import userRoutes from "./api/user/user.routes";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.static('public/images'));
 
 // routes
 app.use("/api/menu", menuRoutes);
+app.use("/user", userRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello")

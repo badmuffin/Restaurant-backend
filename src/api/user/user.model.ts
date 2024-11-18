@@ -13,12 +13,15 @@ const userSchema: Schema = new Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    min: 8,
+    max: 50
   }
-});
+}, {timestamps: true});
 
 export default mongoose.model<IUser>("User", userSchema);
