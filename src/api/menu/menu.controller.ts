@@ -14,7 +14,7 @@ export const getMenu = async (req: Request, res: Response) => {
     if (error instanceof Error)
       res.status(404).json({ message: error.message });
     else
-      res.status(404).json({ message: "An Unknown Error Occurred" });
+      res.status(500).json({ message: "An Unknown Error Occurred" });
   }
 }
 
@@ -29,7 +29,7 @@ export const postMenu = async (req: Request, res: Response) => {
       return res.status(400).send("Title and desc are required");
     }
 
-    const newMenu = new Menu({img: req.file.path, title, desc});
+    const newMenu = new Menu({ img: req.file.path, title, desc });
     await newMenu.save();
 
     return res.status(200).json({
@@ -41,16 +41,42 @@ export const postMenu = async (req: Request, res: Response) => {
       }
     })
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+    else
+      res.status(500).json({ message: "An Unknown Error Occurred" });
   }
 
 }
 
 export const updateMenu = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  console.log(req.body);
+  const { title, desc } = req.body;
 
+  try {
+    const updatedMenu = await Menu.findByIdAndUpdate(
+      id,
+      { img: req.file?.path, title, desc },
+      { new: true, runValidators: true}
+    )
+
+    console.log(updatedMenu);
+    if (!updatedMenu)
+      return res.status(404).json({ message: "Menu Not found" });
+
+    res.status(201).json({
+      message: "Menu Updated successfully",
+      data: updatedMenu
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      res.status(400).json({ message: error.message });
+    else
+      res.status(500).json({ message: "An Unknown Error Occurred" });
+  }
 }
 
 export const deleteMenu = async (req: Request, res: Response) => {
-
+  
 }
