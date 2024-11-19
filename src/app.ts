@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import menuRoutes from "./api/menu/menu.routes";
 import userRoutes from "./api/user/user.routes";
+import reviewRoutes from "./api/reviews/review.routes";
 
 const app = express();
 
@@ -15,14 +16,15 @@ app.use(express.static('public/images'));
 // routes
 app.use("/api/menu", menuRoutes);
 app.use("/user", userRoutes);
+app.use("/api/review", reviewRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello")
 })
 
-app.all('*', (req: Request, res: Response) => {
-  res.status(404).send("Route does not exist");
-});
+// app.all('*', (req: Request, res: Response) => {
+//   res.status(404).send("Route does not exist");
+// });
 
 export default app;
 

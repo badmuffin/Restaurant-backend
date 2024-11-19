@@ -7,7 +7,7 @@ export const getMenu = async (req: Request, res: Response) => {
     const allMenu = await Menu.find();
 
     if (allMenu.length <= 0)
-      return res.status(404).json({ msg: "Not found" })
+      throw new Error("Menus Not found");
 
     console.log(allMenu);
     res.status(200).json(allMenu);
@@ -52,7 +52,7 @@ export const postMenu = async (req: Request, res: Response) => {
 
 export const updateMenu = async (req: Request, res: Response) => {
   const id = req.params.id;
-  console.log(req.body);
+  // console.log(req.body);
   const { title, desc } = req.body;
 
   try {
