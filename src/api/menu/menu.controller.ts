@@ -30,16 +30,13 @@ export const postMenu = async (req: Request, res: Response) => {
       return res.status(400).send("Title and desc are required");
     }
 
-    const newMenu = new Menu({ img: req.file.path, title, desc });
+    let image = `images/${req.file.filename}`
+    const newMenu = new Menu({ img: image, title, desc });
     await newMenu.save();
 
     return res.status(200).json({
       msg: "Dish added successfully",
-      data: {
-        title: title,
-        desc: desc,
-        imagePath: req.file.path
-      }
+      data: newMenu
     })
   } catch (error) {
     if (error instanceof Error)

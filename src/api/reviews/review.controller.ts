@@ -54,7 +54,7 @@ export const updateReview = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const { review, name, title } = req.body;
-  
+
     const updatedReview = await Review.findByIdAndUpdate(
       id,
       { img: req.file?.path, review, name, title },
@@ -86,10 +86,10 @@ export const deleteReview = async (req: Request, res: Response) => {
     const deletedReview = await Review.findByIdAndDelete(id);
     console.log(deletedReview);
 
-    if(!deletedReview)
+    if (!deletedReview)
       throw new Error("Review Not Found");
 
-    if(deletedReview.img) {
+    if (deletedReview.img) {
       try {
         fs.unlinkSync(`${deletedReview.img}`);
       } catch (error) {
@@ -97,7 +97,8 @@ export const deleteReview = async (req: Request, res: Response) => {
       }
     }
 
-    res.status(200).json({message: "Review DEleted successfully",
+    res.status(200).json({
+      message: "Review DEleted successfully",
       Data: deletedReview
     });
   } catch (error) {

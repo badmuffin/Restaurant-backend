@@ -4,14 +4,14 @@ import { Request } from "express";
 
 const storage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb: Function) => {
-    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "image/jpg")
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "image/jpg")
       cb(null, "public/images");
     else
       cb(null, "public/others");
   },
   filename: (req: Request, file: Express.Multer.File, cb: Function) => {
     // for creating unique file name
-    cb(null, file.originalname + "-" + Date.now());
+    cb(null, Date.now() + "-" + file.originalname);
   }
 })
 
@@ -20,7 +20,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: Function) => {
   const extname = fileType.test(path.extname(file.originalname).toLowerCase());
   const mimeType = fileType.test(file.mimetype);
 
-  if(extname && mimeType) return cb(null, true);
+  if (extname && mimeType) return cb(null, true);
 
   cb(new Error("Invalid file type"));
 }
@@ -30,5 +30,5 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: Function) => {
 export const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024} // max file size 10 mb
+  limits: { fileSize: 10 * 1024 * 1024 } // max file size 10 mb
 })
