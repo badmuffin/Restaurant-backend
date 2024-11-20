@@ -3,6 +3,7 @@ import cors from "cors";
 import menuRoutes from "./api/menu/menu.routes";
 import userRoutes from "./api/user/user.routes";
 import reviewRoutes from "./api/reviews/review.routes";
+import newsletterRoutes from "./api/newsletter/newsletter.routes";
 import path from "path";
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use("/api/menu", menuRoutes);
 app.use("/user", userRoutes);
 app.use("/api/review", reviewRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello")

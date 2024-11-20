@@ -20,7 +20,8 @@ export const handleUserLogin = async (req: Request, res: Response) => {
 
     // generate jwt token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY as string, { expiresIn: "24hr" })
-
+    res.cookie("token", token);
+    
     return res.json({ token, msg: "User logged in", user: { id: user._id, email: user.email } });
   } catch (error) {
     res.status(500).json({ message: "Server error occurred" });
