@@ -29,17 +29,13 @@ export const postReview = async (req: Request, res: Response) => {
     if (!review || !name || !title)
       return res.status(400).json({ message: "Missing field(s)" });
 
-    const newReview = new Review({ img: req.file.path, review, name, title });
+    let image = `images/${req.file.filename}`
+    const newReview = new Review({ img: image, review, name, title });
     await newReview.save();
 
     return res.status(200).json({
       msg: "Review Added Successfully",
-      data: {
-        review,
-        name,
-        title,
-        imagePath: req.file.path
-      }
+      data: newReview
     })
   } catch (error) {
     if (error instanceof Error)
