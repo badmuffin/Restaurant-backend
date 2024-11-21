@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -19,8 +19,8 @@ export const handleUserLogin = async (req: Request, res: Response) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid Crudentials" });
 
     // generate jwt token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY as string, { expiresIn: "24hr" })
-    res.cookie("token", token);
+    const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET_KEY as string, { expiresIn: "1hr" })
+    // res.cookie("token", token); we will handle this in the frontend
     
     return res.json({ token, msg: "User logged in", user: { id: user._id, email: user.email } });
   } catch (error) {
