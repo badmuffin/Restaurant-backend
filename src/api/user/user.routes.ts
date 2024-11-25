@@ -1,11 +1,11 @@
-import express, { RequestHandler } from "express"
+import express from "express"
 import { handleUserLogin , handleUserSignup } from "./user.controller";
 
 const router = express.Router();
 
 // login routes
-router.post("/login", handleUserLogin as RequestHandler);
-router.post("/signup", handleUserSignup as RequestHandler);
+router.post("/login", handleUserLogin);
+router.post("/signup", handleUserSignup);
 
 export default router;
  

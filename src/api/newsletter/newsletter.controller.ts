@@ -1,11 +1,13 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { sendEmail } from "../../utils/sendEmail";
 
-export const sendingMail = async (req: Request, res: Response) => {
+export const sendingMail: RequestHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
 
-  if (!email)
-    return res.status(400).json({ success: false, message: "Email is required." });
+  if (!email) {
+    res.status(400).json({ success: false, message: "Email is required." });
+    return;
+  }
 
 
   // Mail contents
@@ -20,8 +22,10 @@ export const sendingMail = async (req: Request, res: Response) => {
 
   try {
     const emailSent = await sendEmail({ to: email, subject, html })
-    if (emailSent)
-      return res.status(200).json("Email sent successfully");
+    if (emailSent) {
+      res.status(200).json("Email sent successfully");
+      return;
+    }
     else
       throw new Error("Failed to sent email");
   } catch (error) {

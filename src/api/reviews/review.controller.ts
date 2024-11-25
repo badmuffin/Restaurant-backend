@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import Review from "./review.model";
 import fs from "fs";
 
-export const getReview = async (req: Request, res: Response) => {
+export const getReview: RequestHandler = async (req: Request, res: Response) => {
   try {
     const allReview = await Review.find();
 
@@ -19,21 +19,23 @@ export const getReview = async (req: Request, res: Response) => {
   }
 }
 
-export const postReview = async (req: Request, res: Response) => {
+export const postReview: RequestHandler = async (req: Request, res: Response) => {
   try {
     const { review, name, title } = req.body;
 
     // check whether the required files and fields are present
     if (!req.file)
       throw new Error("No File Uploaded");
-    if (!review || !name || !title)
-      return res.status(400).json({ message: "Missing field(s)" });
+    if (!review || !name || !title) {
+      res.status(400).json({ message: "Missing field(s)" });
+      return;
+    }
 
     let image = `images/${req.file.filename}`
     const newReview = new Review({ img: image, review, name, title });
     await newReview.save();
 
-    return res.status(200).json({
+    res.status(200).json({
       msg: "Review Added Successfully",
       data: newReview
     })
@@ -46,7 +48,7 @@ export const postReview = async (req: Request, res: Response) => {
 }
 
 // when user updates the review, the old image should also be deleted
-export const updateReview = async (req: Request, res: Response) => {
+export const updateReview: RequestHandler = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const { review, name, title } = req.body;
@@ -74,7 +76,7 @@ export const updateReview = async (req: Request, res: Response) => {
   }
 }
 
-export const deleteReview = async (req: Request, res: Response) => {
+export const deleteReview: RequestHandler = async (req: Request, res: Response) => {
   const id = req.params.id;
   console.log(id);
 
@@ -87,7 +89,7 @@ export const deleteReview = async (req: Request, res: Response) => {
 
     if (deletedReview.img) {
       try {
-        fs.unlinkSync(`${deletedReview.img}`);
+        fs.unlinkSync(`./public/${deletedReview.img}`);
       } catch (error) {
         throw new Error("Image Not deleted")
       }
