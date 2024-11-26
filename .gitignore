@@ -11,3 +11,4 @@
 
 # Build directories
 /dist
+/build
