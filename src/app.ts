@@ -25,11 +25,11 @@ app.use(express.static(path.join(__dirname, '../public'))); // for making public
 // app.use("/api/menu", authenticate, menuRoutes);
 // app.use("/api/review", authenticate, reviewRoutes);
 
-// app.use("/api/menu", jwtCheck, menuRoutes);
-// app.use("/api/review", jwtCheck, reviewRoutes);
+app.use("/api/menu", jwtCheck, menuRoutes);
+app.use("/api/review", jwtCheck, reviewRoutes);
 
-app.use("/api/menu", menuRoutes);
-app.use("/api/review", reviewRoutes);
+// app.use("/api/menu", menuRoutes);
+// app.use("/api/review", reviewRoutes);
 
 app.use("/user", userRoutes);
 app.use("/api/newsletter", newsletterRoutes);
