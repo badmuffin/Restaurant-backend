@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { sendEmail } from "../../utils/sendEmail";
+import { handleError } from "../../utils/handleError";
 
 export const sendingMail: RequestHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -8,8 +9,6 @@ export const sendingMail: RequestHandler = async (req: Request, res: Response) =
     res.status(400).json({ success: false, message: "Email is required." });
     return;
   }
-
-
   // Mail contents
   const promoCode = "WELCOME10";
   const subject = "Welcome to Our Newsletter!";
@@ -29,10 +28,6 @@ export const sendingMail: RequestHandler = async (req: Request, res: Response) =
     else
       throw new Error("Failed to sent email");
   } catch (error) {
-    console.log(error);
-    if (error instanceof Error)
-      res.status(400).json({ message: error.message });
-    else
-      res.status(500).json({ message: "An Unknown Error Occurred" });
+    handleError(res, error, 400);
   }
 }
