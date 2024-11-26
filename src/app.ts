@@ -16,7 +16,9 @@ const app = express();
 dotenv.config();
 
 // middlewares
-app.use(cors());
+app.use(cors(
+  {origin: process.env.API_URL}
+));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public'))); // for making public static
