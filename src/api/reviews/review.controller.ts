@@ -1,7 +1,8 @@
 import { Request, RequestHandler, Response } from "express";
-import Review from "./review.model";
-import fs from "fs";
+import { createReview, deleteReviewService, getAllReview, updateReviewService } from "./review.service";
+import { handleError } from "../../utils/handleError";
 
+/*
 export const getReview: RequestHandler = async (req: Request, res: Response) => {
   try {
     const allReview = await Review.find();
@@ -17,8 +18,17 @@ export const getReview: RequestHandler = async (req: Request, res: Response) => 
     else
       res.status(500).json({ message: "An Unknown Error Occurred" });
   }
-}
+}*/
 
+export const getReview: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const review = await getAllReview();
+    res.status(200).json(review);
+  } catch (error) {
+    handleError(res, error, 404);
+  }
+}
+/*
 export const postReview: RequestHandler = async (req: Request, res: Response) => {
   try {
     const { review, name, title } = req.body;
@@ -46,7 +56,19 @@ export const postReview: RequestHandler = async (req: Request, res: Response) =>
       res.status(500).json({ message: "An Unknown Error Occurred" });
   }
 }
+*/
 
+export const postReview: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const { review, name, title } = req.body;
+    const newReview = await createReview(req.file, review, name, title);
+    res.status(200).json({ message: "Review Created Successfully", data: newReview });
+  } catch (error) {
+    handleError(res, error, 400);
+  }
+}
+
+/*
 // when user updates the review, the old image should also be deleted
 export const updateReview: RequestHandler = async (req: Request, res: Response) => {
   try {
@@ -75,7 +97,22 @@ export const updateReview: RequestHandler = async (req: Request, res: Response) 
       res.status(500).json({ message: "An Unknown Error Occurred" });
   }
 }
+*/
 
+export const updateReview: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const { review, name, title } = req.body;
+
+    const updatedReview = await updateReviewService(id, req.file, review, name, title);
+    res.status(200).json({ message: "Review updated successfully", data: updatedReview });
+  } catch (error) {
+    handleError(res, error, 400);
+  }
+}
+
+
+/*
 export const deleteReview: RequestHandler = async (req: Request, res: Response) => {
   const id = req.params.id;
   console.log(id);
@@ -104,5 +141,16 @@ export const deleteReview: RequestHandler = async (req: Request, res: Response) 
       res.status(400).json({ message: error.message });
     else
       res.status(500).json({ message: "An Unknown Error Occurred" });
+  }
+}
+  */
+
+export const deleteReview: RequestHandler = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const deletedReview = await deleteReviewService(id);
+    res.status(200).json({ message: "Review Deleted", data: deletedReview });
+  } catch (error) {
+    handleError(res, error, 400);
   }
 }
